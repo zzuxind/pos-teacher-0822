@@ -1,4 +1,4 @@
-const {countProducts,fetchProduct,generateReceiptItems,countTotalPrice,assemble} = require('../main');
+const {countProducts,fetchProduct,generateReceiptItems,countTotalPrice,assemble,generateReceipts} = require('../main');
 // const db=[
 //     {"id": "0001", "name" : "Coca Cola", "price": 3},
 //     {"id": "0002", "name" : "Diet Coke", "price": 4},
@@ -28,9 +28,11 @@ const {countProducts,fetchProduct,generateReceiptItems,countTotalPrice,assemble}
 // });
 
 it("结果验证",()=>{
+    //验证generateReceiptItems
     var codes=generateReceiptItems(['0003','0003','0001']);
     console.log("generateReceiptItems:",codes);
 
+    //countTotalPrice
     const items=[ 
         { name: 'Pepsi-Cola', price: 5, count: 2 },
         { name: 'Coca Cola', price: 3, count: 1 } 
@@ -38,7 +40,13 @@ it("结果验证",()=>{
     const totalPrice=countTotalPrice(items);
     console.log(totalPrice);
 
+    //验证assemble
     var assembleInput =[{ name: 'Pepsi-Cola', price: 5, count: 2 },{ name: 'Coca Cola', price: 3, count: 1 }];
     var receiptText = assemble(assembleInput,13);
     console.log(receiptText);
+
+    //验证generateReceipts
+    const barcodes=['0001', '0003', '0005', '0003'];
+    console.log(generateReceipts(barcodes));
+
 })

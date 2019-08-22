@@ -10,7 +10,8 @@ const db=[
     {"id": "0009", "name" : "Diet Dr Pepper", "price": 11},
     {"id": "0010", "name" : "Fanta", "price": 12}
 ]
-// ['0003','0003','0001']
+//整理订单 
+//['0003','0003','0001']=>[{code:,count:},{code:,count:}]
 function countProducts (codes) {
     let countedProduct=[];
     let map=new Map();
@@ -30,6 +31,7 @@ function countProducts (codes) {
     return countedProduct;
 }
 
+
 function fetchProduct(code,db){
     let product;
     for(let element in db){
@@ -39,7 +41,8 @@ function fetchProduct(code,db){
     }
 }
 
-
+//根据订单获得订单详情
+//['0003','0003','0001'] =>[{name:,price:,count:},{name:,price:,count:,}]
 function generateReceiptItems(codes){
     let items=[];
     let counts=countProducts(codes);
@@ -55,10 +58,9 @@ function generateReceiptItems(codes){
     return items;
     console.log(items);
 }
-// [ 
-//     { name: 'Pepsi-Cola', price: 5, count: 2 },
-//     { name: 'Coca Cola', price: 3, count: 1 } 
-// ];
+
+//根据订单详情获得总金额
+//[{name:,price:,count:},{name:,price:,count:,}] => totalprice
 function countTotalPrice(items){
     let totalPrice=0;
     items.forEach(element => {
@@ -70,22 +72,33 @@ function countTotalPrice(items){
     return totalPrice;
 }
 
+//根据订单详情和总金额 打印小票
+//([{name:,price:,count:},{name:,price:,count:,}] , totalprice) => String
 function assemble(items,totalPrice){
     let head="Receipts\n-----------------------------\n";
     let foot="-----------------------------\nPrice:"+totalPrice;
     let middle="";
     let assembleprint="";
     items.forEach(element => {
-        middle+=element.name+"      "+element.price+"      "+element.count+"\n";
+        middle+=element.name+"\t"+element.price+"\t"+element.count+"\n";
     });
     assembleprint=head+middle+foot;
     return assembleprint;
     console.log(assembleprint);
+}
+
+function generateReceipts(codes){
+    let items=generateReceiptItems(codes);
+    let result=assemble(items,countTotalPrice(items));
+    console.log(result);
+    return result;
+
 }
 module.exports = {
     countProducts,
     fetchProduct,
     generateReceiptItems,
     countTotalPrice,
-    assemble
+    assemble,
+    generateReceipts
 }
